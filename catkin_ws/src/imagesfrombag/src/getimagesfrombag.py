@@ -19,7 +19,7 @@ import sys
 
 class ImageCreator():
 
-    image_type = ".tif"
+    image_type = ".png"
     desired_topic = {'left_raw':'/camera_array/cam0/image_raw',
                 'right_raw':'/camera_array/cam1/image_raw',
                 'ir':'/flir_boson/image_raw'
@@ -54,6 +54,7 @@ class ImageCreator():
             os.makedirs(save_dir)
         #.strip('/')[-1]
         # Open bag file.
+        i = 0
         with rosbag.Bag(filename, 'r') as bag:
             for topic, msg, t in bag.read_messages():
                 #topic_parts = topic.split('/')
@@ -76,7 +77,8 @@ class ImageCreator():
                         print e
                     timestr = "%.3f" % msg.header.stamp.to_sec()
                     if self.index_in_filename:
-                        image_name = str(save_dir) +'/'+topic_dir_name +"/" + bagname +'_{}'.format(topic_sub_location)+ "_" + format(self.image_index[topic_sub_location], self.index_format) + "-" + timestr + self.image_type
+                        image_name = str(save_dir) +'/'+topic_dir_name +"/" + "{0:06d}".format(self.image_index[topic_sub_location])+self.image_type#str(save_dir) +'/'+topic_dir_name +"/" + bagname +'_{}'.format(topic_sub_location)+ "_" + format(self.image_index[topic_sub_location], self.index_format) + "-" + timestr + self.image_type
+                        i+=1
                     else:
                         image_name = str(save_dir) +'/'+topic_dir_name + "/" + bagname +'_{}'.format(topic_sub_location) + "_" + timestr + self.image_type
                     #print image_name
